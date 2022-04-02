@@ -3,6 +3,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import CreateEvent from './pages/CreateEvent';
 import Events from './pages/Events';
+import Event from './pages/Event';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import MyEvents from './pages/MyEvents';
@@ -23,6 +24,7 @@ function App() {
               <Route path='/login' element={<Login />} />
               <Route path='/register' element={<Register />} />
               <Route path='/my_events' element={<MyEvents />} />              
+              <Route path='/event/:id' element={<Event />} />              
             </Routes>
         </Router>
 

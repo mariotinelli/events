@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, HeaderComponent, Input, Logo, Navbar, Search } from './styled';
+import { Button, HeaderComponent, Input, LinkLogo, Logo, Navbar, Search } from './styled';
 import { NavLink } from 'react-router-dom'
 import logo from '../../../public/images/Tinelli Eventos.png'
 
@@ -11,7 +11,9 @@ const Header = () => {
   return (  
       <HeaderComponent>
 
-        <Logo src={logo} />
+        <LinkLogo href='/'>
+            <Logo src={logo} />
+        </LinkLogo>
 
         <Search>
             <Input type="text" placeholder='Busque um evento'/>

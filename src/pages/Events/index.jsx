@@ -1,7 +1,6 @@
 import React from 'react'
 import EventCard from '../../components/EventCard';
 import { Cards, EventsComponent, Title } from './styled';
-
 import useFetch from '../../useFetch';
 
 
@@ -32,6 +31,7 @@ const Events = () => {
               <Cards>
                   {events.map((event) => (                      
                       <EventCard 
+                        id={event.id}
                         key={event.id}
                         src={event.img} 
                         title={event.title} 

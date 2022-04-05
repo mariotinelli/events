@@ -1,7 +1,7 @@
 import React from 'react'
 
-import { Card, Date, Image, Informations, Locality, Participants, Title, Button } from './styled';
-
+import { Card, Date, Image, Informations, Locality, Participants, Title} from './styled';
+import Button from '@mui/material/Button';
 const EventCard = ({src, id, title, date, locality, participants}) => {
   
 
@@ -14,7 +14,7 @@ const EventCard = ({src, id, title, date, locality, participants}) => {
             <Date> {date} </Date>
             <Locality> {locality} </Locality>
             <Participants> {participants} </Participants>
-            <Button to={`/events/${id}`}> Saber mais </Button>
+            <Button href={`/events/${id}`} variant="contained" color="success" size="small"> Saber mais </Button>
         </Informations>
     </Card>
   )

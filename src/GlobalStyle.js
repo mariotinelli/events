@@ -10,7 +10,7 @@ const GlobalStyle = createGlobalStyle`
   }
   
   body {
-    background: var(--background-body);
+    background: var(--white-color);
   }
 
   :root {
@@ -28,6 +28,7 @@ const GlobalStyle = createGlobalStyle`
       --font-1: 1rem; // 16px
       --font-2: 2rem; // 32px
       --font-3: 1.5rem; // 24px
+      --font-4: 1.75rem; // 28px
   }
 `;
  

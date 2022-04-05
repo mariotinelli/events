@@ -1,63 +1,52 @@
 import React from 'react'
-import { useState } from 'react';
-import { useEffect } from 'react';
 import EventCard from '../../components/EventCard';
 import { Cards, EventsComponent, Title } from './styled';
 
-//import useFetch from '../../useFetch';
+import useFetch from '../../useFetch';
+
 
 const Events = () => {
     
-    const [events, setEvents] = useState([])
-
-    /*const {data: events, loading, error} = useFetch({
-        url: 'http://localhost:8000/api/events',
+    const options = {
         method: 'GET',
         headers: {
           "Content-type": "application/json"
         }
-    });*/
+    }
 
+    const {data: events, loading, error} = useFetch('http://localhost:8000/api/events', options);
 
-    useEffect(() => {
-      fetch('http://localhost:8000/api/events', {
-        method: 'GET',
-        headers: {
-          "Content-type": "application/json"
-        }
-      })
-      .then((resp) => resp.json())
-      .then((data) => {
-        setEvents(data);
-      })
-      .catch((error) => console.log(error))      
-    }, [])
+    if (loading) {
+      return <h1>Carregando...</h1>
+    }
+
+    if (error) {
+      return <h1>{error}</h1>
+    }
 
     return (
       <EventsComponent>
           <Title> Próximos Eventos </Title>
-          {/*{loading && (
-              <h1>Carregando...</h1>
-          )}      */}     
-          {events ? (
-            <Cards>
-                {events.map((event) => (
-                    <EventCard 
-                      key={event.id}
-                      src={event.img} 
-                      title={event.title} 
-                      date="15/12/1994"
-                      locality={event.locality}
-                      participants={`${event.participants} Participantes`}/>
-                ))}
-            </Cards>
-          ) : (
-            <h3>Não há eventos disponíveis!</h3>
-          )}     
+          {console.log(events)}
+          {events.length > 0 ? (
+              <Cards>
+                  {events.map((event) => (                      
+                      <EventCard 
+                        key={event.id}
+                        src={event.img} 
+                        title={event.title} 
+                        date="15/12/1994"
+                        locality={event.locality}
+                        participants={`${event.participants} Participantes`}
+                      />
+                  ))}
+              </Cards>
+          ) : (              
+              <h1>Não há eventos disponíveis...</h1>
+          )}
 
       </EventsComponent>
     )
-
 }
 
 export default Events;

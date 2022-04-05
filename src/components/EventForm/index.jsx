@@ -4,19 +4,32 @@ import Input from '../Layout/Form/Input';
 import TextArea from '../Layout/Form/TextArea';
 import Form from '../Layout/Form/Form';
 import Button from '../Layout/Form/Button'
+import { useRef } from 'react';
+
+import useFetch from '../../useFetch';
 
 const EventForm = ({handleSubmit, eventData, btnText}) => {
 
+    const imgRef = useRef();
     const [event, setEvent] = useState(eventData || {})
+    const [image, setImage] = useState();
 
     function handleChange(e) {
         setEvent({ ...event, [e.target.name]: e.target.value})
         //setValue(e.target.name, e.target.value)
     }
 
+    function handleImage(e) {
+        //setImage(e.target.files[0])        
+        setImage(URL.createObjectURL(e.target.files[0]));
+        event.img = image;
+        //console.log(typeof image);
+    }     
+
+    
     const createEvent = (e) => {
         e.preventDefault();
-        handleSubmit(event);        
+        handleSubmit(event, image);        
     }
 
     return (
@@ -25,10 +38,11 @@ const EventForm = ({handleSubmit, eventData, btnText}) => {
                 label="Imagem" 
                 type="file" 
                 name="img" 
-                value={event.img ? event.img : ""} 
-                handleChange={handleChange} 
+                //value={image?.name ? image.name : ""}
+                handleChange={handleImage} 
                 placeholder="Imagem do evento" 
             />
+            <div>{event.img}</div>
             <Input 
                 label="Titulo" 
                 type="text" 

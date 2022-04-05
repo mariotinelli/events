@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import {Link} from 'react-router-dom'
 
 export const Card = styled.div`
     display: flex;
@@ -50,9 +51,10 @@ export const Participants = styled.p`
 `;
 
 
-export const Button = styled.button`
+export const Button = styled(Link)`
     font-size: var(--font-1);
     background-color: var(--success-color);
+    text-decoration: none;
     color: var(--white-color);
     padding: 0.375rem 0.75rem;
     border: none;

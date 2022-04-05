@@ -2,33 +2,30 @@ import React from 'react'
 import EventForm from '../../components/EventForm';
 import { Container, Title } from './styled';
 import { useNavigate } from 'react-router-dom';
-//import axios from 'axios';
+import useFetch from '../../useFetch';
 
-import {parse, stringify, toJSON, fromJSON} from 'flatted';
 
 const CreateEvent = () => {
 
     const navigate = useNavigate();
 
-    function onSubmit(event) {
+    function onSubmit(event, img) {
 
       event.participants = 0;
-
-      fetch('http://localhost:8000/api/event', {
+      event.img = img;
+      
+      const options = {
           method: 'POST',
           headers: {
               'Content-type': 'application/json',
           },
           body: JSON.stringify(event),
-      })
-      .then((resp) => resp.json())
-      .then((data) => {
-        console.log(data);
-        navigate('/my_events', { state: {message: "Evento criado com sucesso"}})
-      })
-      .catch((error) => console.log(error))
-      
+      }
+
+      fetch('http://localhost:8000/api/event', options)
+      navigate('/my_events')      
     }
+
     return (
       <>
         <Container>

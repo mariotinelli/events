@@ -2,7 +2,10 @@ import React from 'react'
 
 import { Card, Date, Image, Informations, Locality, Participants, Title, Button } from './styled';
 
-const EventCard = ({src, title, date, locality, participants}) => {
+const EventCard = ({src, id, title, date, locality, participants}) => {
+  
+
+  
   return (
     <Card>
         <Image src={src} alt="image card"/>
@@ -11,7 +14,7 @@ const EventCard = ({src, title, date, locality, participants}) => {
             <Date> {date} </Date>
             <Locality> {locality} </Locality>
             <Participants> {participants} </Participants>
-            <Button > Saber mais </Button>
+            <Button to={`/events/${id}`}> Saber mais </Button>
         </Informations>
     </Card>
   )

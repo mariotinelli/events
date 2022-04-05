@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import EventForm from '../../components/EventForm';
 import { Container, Title } from './styled';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +8,7 @@ import useFetch from '../../useFetch';
 const CreateEvent = () => {
 
     const navigate = useNavigate();
+    const [eventTypes, setEventTypes] = useState({});
 
     function onSubmit(event, img) {
 
@@ -25,6 +26,8 @@ const CreateEvent = () => {
       fetch('http://localhost:8000/api/event', options)
       navigate('/my_events')      
     }
+
+    
 
     return (
       <>

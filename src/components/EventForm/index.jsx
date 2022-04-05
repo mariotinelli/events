@@ -1,17 +1,33 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react';
 //import Input from '../Layout/Form/Input';
 //import TextArea from '../Layout/Form/TextArea';
 import Form from '../Layout/Form/Form';
 
 
-import {  InputLabel, TextField, Button } from '@mui/material';
+import {  InputLabel, TextField, Button, Stack, Select, MenuItem, FormControl } from '@mui/material';
 
 const EventForm = ({handleSubmit, eventData, btnText}) => {
 
 
     const [event, setEvent] = useState(eventData || {})
+    const [eventTypes, setEventTypes] = useState({})
     const [image, setImage] = useState();
+    
+    useEffect(() => {
+        const options = {
+            method: 'GET',
+            headers: {
+                'Content-type': 'application/json',
+            },
+        }
+  
+        fetch('http://localhost:8000/api/event_types', options)
+          .then((resp) => resp.json())
+          .then((data) => setEventTypes(data))
+          .catch((err) => console.log(err))
+  
+    },[])
 
     function handleChange(e) {
         setEvent({ ...event, [e.target.name]: e.target.value})
@@ -51,16 +67,46 @@ const EventForm = ({handleSubmit, eventData, btnText}) => {
                 onChange={handleChange} 
                 fullWidth 
             />
-            <TextField 
-                id="locality" 
-                name="locality"
-                label="Localidade" 
-                variant="outlined" 
-                size='small' 
-                value={event.locality ? event.locality : ""} 
-                onChange={handleChange} 
-                fullWidth 
-            />
+            <Stack direction="row" justifyContent="space-between" spacing={2} sx={{width: "100%"}}>
+                <TextField 
+                    type="date"
+                    id="date" 
+                    name="date"
+                    variant="outlined" 
+                    size='small' 
+                    value={event.date ? event.date : ""} 
+                    onChange={handleChange} 
+                    fullWidth 
+                />
+                <TextField 
+                    id="locality" 
+                    name="locality"
+                    label="Local" 
+                    variant="outlined" 
+                    size='small' 
+                    value={event.locality ? event.locality : ""} 
+                    onChange={handleChange} 
+                    fullWidth 
+                />
+            </Stack>
+            <FormControl fullWidth>
+                <InputLabel id="area">Selecione uma área</InputLabel>
+                <Select 
+                    label="Selecione uma área" 
+                    labelId="area" 
+                    id="area" 
+                    name="area"
+                    value={event.area ? event.area : ""} 
+                    onChange={handleChange} 
+                    placeholder="Selecione uma opção"
+                    fullWidth                >
+                    {eventTypes.length > 0 && (
+                        eventTypes?.map((type) => (
+                            <MenuItem key={type.id} value={type.name}>{type.name}</MenuItem>                            
+                    )))}
+                        
+                </Select>
+            </FormControl>
             <TextField 
                 id="description" 
                 name="description"

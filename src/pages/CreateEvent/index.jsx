@@ -13,14 +13,20 @@ const CreateEvent = () => {
     function onSubmit(event, img) {
 
       event.participants = 0;
-      event.img = img;
+      //event.img = img;
       
+      const formData = new FormData();
+      formData.append('title', event.title);
+      formData.append('img', img);
+      formData.append('participants', event.participants);
+      formData.append('description', event.description);
+      formData.append('event_type_id', event.event_type_id);
+      formData.append('date', event.date);
+      formData.append('locality', event.locality);
+
       const options = {
           method: 'POST',
-          headers: {
-              'Content-type': 'application/json',
-          },
-          body: JSON.stringify(event),
+          body: formData,
       }
 
       fetch('http://localhost:8000/api/event', options)

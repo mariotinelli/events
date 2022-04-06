@@ -9,6 +9,7 @@ import Register from './pages/Register';
 import MyEvents from './pages/MyEvents';
 import GlobalStyle from './GlobalStyle';
 import Header from './components/Header';
+import EditEvent from './pages/EditEvent';
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
               <Route path='/register' element={<Register />} />
               <Route path='/my_events' element={<MyEvents />} />              
               <Route path='/events/:id' element={<Event />} />              
+              <Route path='/edit/:id' element={<EditEvent />} />              
             </Routes>
         </Router>
 

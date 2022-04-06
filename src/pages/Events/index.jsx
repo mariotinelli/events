@@ -2,10 +2,12 @@ import React from 'react'
 import EventCard from '../../components/EventCard';
 import { Cards, EventsComponent, Title } from './styled';
 import useFetch from '../../useFetch';
-
+import dateFormat from '../../../utils';
 
 const Events = () => {
     
+    const imageURL = "http://localhost:8000/storage/img/";
+
     const options = {
         method: 'GET',
         headers: {
@@ -26,16 +28,15 @@ const Events = () => {
     return (
       <EventsComponent>
           <Title> Próximos Eventos </Title>
-          {console.log(events)}
           {events.length > 0 ? (
               <Cards>
                   {events.map((event) => (                      
                       <EventCard 
                         id={event.id}
                         key={event.id}
-                        src={event.img} 
+                        src={imageURL+event.img} 
                         title={event.title} 
-                        date="15/12/1994"
+                        date={dateFormat(event.date)}
                         locality={event.locality}
                         participants={`${event.participants} Participantes`}
                       />

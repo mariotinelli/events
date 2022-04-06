@@ -9,6 +9,24 @@ import EditIcon from '@mui/icons-material/Edit';
 
 const MyEvents = () => {
 
+  function loadType(event){
+      const type = eventTypes.find((type) => type.id === event.event_type_id);
+      return type.name;
+  }
+
+  function deleteEvent(event){
+    const options = {
+      method: 'DELETE',
+      headers: {
+        "Content-type": "application/json"
+      }      
+    }
+
+    fetch(`http://localhost:8000/api/event/${event.id}`, options)
+    .then((resp) => resp.json())
+    .then((data) => console.log(data))
+    .catch((err) => console.log(err));
+  }
 
   const options = {
     method: 'GET',
@@ -16,7 +34,7 @@ const MyEvents = () => {
       "Content-type": "application/json"
     }
   }
-
+  const {data: eventTypes} = useFetch('http://localhost:8000/api/event_types', options);
   const {data: events, loading, error} = useFetch('http://localhost:8000/api/events', options);
 
   if (loading) {
@@ -33,7 +51,6 @@ const MyEvents = () => {
         <Table>
           <Thead>
             <Tr>
-              <Th> Owner </Th>
               <Th> Title </Th>
               <Th> Date </Th>
               <Th> Area </Th>
@@ -45,18 +62,17 @@ const MyEvents = () => {
           <Tbody>
             {events.map((event) => (
               <Tr key={event.id}>
-                <Td> "Dono" </Td>
                 <Td> {event.title} </Td>
                 <Td> "17/12/1994" </Td>
-                <Td> "Tecnlogia" </Td>
+                <Td> {loadType(event)} </Td>
                 <Td> {event.locality} </Td>
                 <Td> {event.participants} </Td>
                 <Td> 
                   <Stack direction="row" spacing={2}>
-                    <IconButton sx={{backgroundColor: "green", color: "white"}} aria-label="delete">
+                    <IconButton href={`/edit/${event.id}`} sx={{backgroundColor: "green", color: "white"}} aria-label="delete">
                       <EditIcon />
                     </IconButton>
-                    <IconButton sx={{backgroundColor: "red", color: "white"}} aria-label="delete">
+                    <IconButton onClick={deleteEvent} sx={{backgroundColor: "red", color: "white"}} aria-label="delete">
                       <DeleteIcon />
                     </IconButton>
                   </Stack>

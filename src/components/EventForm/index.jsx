@@ -1,19 +1,31 @@
-import React, { useEffect } from 'react'
-import { useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react'
 //import Input from '../Layout/Form/Input';
 //import TextArea from '../Layout/Form/TextArea';
 import Form from '../Layout/Form/Form';
-
-
 import {  InputLabel, TextField, Button, Stack, Select, MenuItem, FormControl } from '@mui/material';
+
 
 const EventForm = ({handleSubmit, eventData, btnText}) => {
 
-
-    const [event, setEvent] = useState(eventData || {})
-    const [eventTypes, setEventTypes] = useState({})
+    const imageURL = "http://localhost:8000/storage/img/";
+    const [event, setEvent] = useState({} || eventData);
+    const [eventTypes, setEventTypes] = useState({});
     const [image, setImage] = useState();
+    const [eventType, setEventType] = useState();
     
+    const imageRef = useRef();
+
+    useEffect(() => {
+        if (eventData !== null) {
+            setEvent(eventData);
+            imageRef.current.src = imageURL+eventData.img;
+    }}, [eventData])
+
+    function dateFormat(date) {
+        let newDate = new Date(date);
+        return newDate.toISOString().split('T')[0];
+    }
+
     useEffect(() => {
         const options = {
             method: 'GET',
@@ -29,24 +41,33 @@ const EventForm = ({handleSubmit, eventData, btnText}) => {
   
     },[])
 
+    const formData = new FormData();////////
+
     function handleChange(e) {
         setEvent({ ...event, [e.target.name]: e.target.value})
+        formData.append(e.target.name, e.target.value); /////////////
     }
 
-    function handleImage(e) {      
-        setImage(URL.createObjectURL(e.target.files[0]));
-        event.img = image;
-    }     
+    function handleImage(e) {    
+        if (e.target.files[0]) {
+            imageRef.current.src = URL.createObjectURL(e.target.files[0]);
+        } else {
+            imageRef.current.src = imageURL+event.img;
+        }         
+        setImage(e.target.files[0]);
+        formData.append(e.target.name, e.target.files[0]); ////////////////////
+    } 
 
-    
-    const createEvent = (e) => {
+  
+    const submit = (e) => {
         e.preventDefault();
-        handleSubmit(event, image);    
+        //handleSubmit(event, image);    
+        handleSubmit(formData);    
     }
 
     return (
-        <Form onSubmit={createEvent}> 
-            <InputLabel htmlFor="component-simple">Imagem</InputLabel>
+        <Form onSubmit={submit}> 
+            <InputLabel htmlFor="img">Imagem</InputLabel>
             <TextField 
                 type="file" 
                 id="img" 
@@ -56,7 +77,7 @@ const EventForm = ({handleSubmit, eventData, btnText}) => {
                 onChange={handleImage} 
                 fullWidth
             />        
-            <div>{event.img}</div>
+            <img ref={imageRef} style={{width: "100%"}}/>
             <TextField 
                 id="title" 
                 name="title"
@@ -74,7 +95,7 @@ const EventForm = ({handleSubmit, eventData, btnText}) => {
                     name="date"
                     variant="outlined" 
                     size='small' 
-                    value={event.date ? event.date : ""} 
+                    value={event.date ? dateFormat(event.date) : ""} 
                     onChange={handleChange} 
                     fullWidth 
                 />
@@ -93,16 +114,16 @@ const EventForm = ({handleSubmit, eventData, btnText}) => {
                 <InputLabel id="area">Selecione uma área</InputLabel>
                 <Select 
                     label="Selecione uma área" 
-                    labelId="area" 
-                    id="area" 
-                    name="area"
-                    value={event.area ? event.area : ""} 
+                    labelId="event_type_id" 
+                    id="event_type_id" 
+                    name="event_type_id"
+                    value={event.event_type_id ? event.event_type_id : ""} 
                     onChange={handleChange} 
                     placeholder="Selecione uma opção"
                     fullWidth                >
                     {eventTypes.length > 0 && (
                         eventTypes?.map((type) => (
-                            <MenuItem key={type.id} value={type.name}>{type.name}</MenuItem>                            
+                            <MenuItem key={type.id} value={type.id}>{type.name}</MenuItem>                            
                     )))}
                         
                 </Select>

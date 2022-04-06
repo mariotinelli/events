@@ -4,26 +4,47 @@ import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { Data, DataContainer, Description, EventComponent, Image, Info, Infos, Title } from './styled';
 import Button from '@mui/material/Button';
-
+import dateFormat from '../../../utils';
 import {IoLocationOutline, IoCalendarOutline, IoGlobeOutline, IoPersonOutline, IoPeopleOutline} from 'react-icons/io5';
-import { ImPencil } from "react-icons/im"; 
+
 
 const Event = () => {
 
   const {id} = useParams();
   const [event, setEvent] = useState({});
+  const [eventType, setEventType] = useState({});
 
-  useEffect(() => {
-      fetch(`http://localhost:8000/api/event/${id}`, {
+  useEffect( async () => {
+    try {
+      let result = await fetch(`http://localhost:8000/api/event/${id}`, {
+            method: "GET",
+            headers: {
+              "Content-type": "application/json",
+            }
+      })
+      let resp = await result.json();
+      setEvent(resp);
+    } catch (err) {
+      console.log(err)
+    }    
+      
+  }, [])
+
+  useEffect( async () => {
+    try {
+      let result = await fetch(`http://localhost:8000/api/event_type/${event.event_type_id}`, {
           method: "GET",
           headers: {
             "Content-type": "application/json",
           }
       })
-      .then((resp) => resp.json())
-      .then((data) => setEvent(data))
-      .catch( (err) => console.log(err) )
-  }, [])
+      let resp = await result.json();
+      setEventType(resp);
+    } catch (err) {
+      console.log(err)
+    };
+
+}, [])
 
   function confirmPresence() {
 
@@ -49,18 +70,18 @@ const Event = () => {
         <Data>
           <Infos>
             <Info> <IoPersonOutline/> Owner</Info>
-            <Info> <IoCalendarOutline/> 17/12/1994</Info>
-            <Info> <IoLocationOutline/> {event.locality}</Info>
+            <Info> <IoCalendarOutline/> {dateFormat(event.date)} </Info>
+            <Info> <IoLocationOutline/> {event.locality} </Info>
           </Infos>
           <Infos>
             <Info> <IoPeopleOutline/> {event.participants} Participantes</Info>
-            <Info> <IoGlobeOutline/> Tecnologico</Info>
+            <Info> <IoGlobeOutline/> {eventType.name} </Info>
           </Infos>
         </Data>
         <Button onClick={confirmPresence} variant="contained" size="medium"> Confirmar Presença </Button>
       </DataContainer>
       <Description>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Error rem iure asperiores, hic et vitae similique debitis nemo aliquid necessitatibus inventore, ex nihil. Tenetur consequatur soluta sequi iste, animi praesentium.
+        {event.description}
       </Description>
     </EventComponent>
   )  

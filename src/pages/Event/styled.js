@@ -19,7 +19,7 @@ export const DataContainer = styled.div`
 
 export const Image = styled.img`
     height: 15.625rem;
-    width: auto;
+    width: 30rem;
     border-radius: 0.625rem;
 `;
 

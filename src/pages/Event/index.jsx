@@ -6,45 +6,48 @@ import { Data, DataContainer, Description, EventComponent, Image, Info, Infos, T
 import Button from '@mui/material/Button';
 import dateFormat from '../../../utils';
 import {IoLocationOutline, IoCalendarOutline, IoGlobeOutline, IoPersonOutline, IoPeopleOutline} from 'react-icons/io5';
-
+import useFetch from '../../useFetch';
 
 const Event = () => {
 
   const {id} = useParams();
+  const [loading, setLoading] = useState(true);
   const [event, setEvent] = useState({});
   const [eventType, setEventType] = useState({});
+  const imageURL = "http://localhost:8000/storage/img/";
 
-  useEffect( async () => {
-    try {
-      let result = await fetch(`http://localhost:8000/api/event/${id}`, {
-            method: "GET",
-            headers: {
-              "Content-type": "application/json",
-            }
-      })
-      let resp = await result.json();
-      setEvent(resp);
-    } catch (err) {
-      console.log(err)
-    }    
-      
-  }, [])
-
-  useEffect( async () => {
-    try {
-      let result = await fetch(`http://localhost:8000/api/event_type/${event.event_type_id}`, {
+  useEffect(() => {
+      fetch(`http://localhost:8000/api/event/${id}`, {
           method: "GET",
           headers: {
             "Content-type": "application/json",
           }
       })
-      let resp = await result.json();
-      setEventType(resp);
-    } catch (err) {
-      console.log(err)
-    };
+      .then(resp => resp.json())
+      .then(data => {
+          fetch(`http://localhost:8000/api/event_type/${data.event_type_id}`, {
+            method: "GET",
+            headers: {
+              "Content-type": "application/json",
+            }
+          })
+          .then(resp => resp.json())
+          .then(data => {
+              setEventType(data);
+          })
+          .catch(err => console.log(err))
+            
+        setEvent(data);
+        setLoading(false);
+      })
+      .catch(err => console.log(err))
+  }, [])
 
-}, [])
+  
+
+  if (loading) {
+    return <h1>Carregando...</h1>
+  }
 
   function confirmPresence() {
 
@@ -64,7 +67,7 @@ const Event = () => {
  
   return (
     <EventComponent>
-      <Image src='/public/images/banner1.png'/>
+      <Image src={imageURL+event.img}/>
       <DataContainer>
         <Title>{event.title}</Title>
         <Data>

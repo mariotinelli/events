@@ -7,7 +7,7 @@ import dateFormat from '../../../utils';
 const Events = () => {
     
     const imageURL = "http://localhost:8000/storage/img/";
-
+    
     const options = {
         method: 'GET',
         headers: {
@@ -28,24 +28,23 @@ const Events = () => {
     return (
       <EventsComponent>
           <Title> Próximos Eventos </Title>
-          {events.length > 0 ? (
-              <Cards>
-                  {events.map((event) => (                      
-                      <EventCard 
-                        id={event.id}
-                        key={event.id}
-                        src={imageURL+event.img} 
-                        title={event.title} 
-                        date={dateFormat(event.date)}
-                        locality={event.locality}
-                        participants={`${event.participants} Participantes`}
-                      />
-                  ))}
-              </Cards>
-          ) : (              
-              <h1>Não há eventos disponíveis...</h1>
-          )}
-
+            {events?.length > 0 ? (
+                <Cards>
+                    {events.map((event) => (                      
+                        <EventCard 
+                          id={event.id}
+                          key={event.id}
+                          src={imageURL+event.img} 
+                          title={event.title} 
+                          date={dateFormat(event.date)}
+                          locality={event.locality}
+                          participants={`${event.participants} Participantes`}
+                        />
+                    ))}
+                </Cards>
+            ) : (              
+                <h1>Não há eventos disponíveis...</h1>
+            )}
       </EventsComponent>
     )
 }

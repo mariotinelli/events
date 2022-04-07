@@ -11,20 +11,21 @@ const EventForm = ({handleSubmit, eventData, btnText}) => {
     const [event, setEvent] = useState({} || eventData);
     const [eventTypes, setEventTypes] = useState({});
     const [image, setImage] = useState();
-    const [eventType, setEventType] = useState();
     
     const imageRef = useRef();
-
-    useEffect(() => {
-        if (eventData !== null) {
-            setEvent(eventData);
-            imageRef.current.src = imageURL+eventData.img;
-    }}, [eventData])
-
+    
     function dateFormat(date) {
         let newDate = new Date(date);
         return newDate.toISOString().split('T')[0];
     }
+
+    useEffect(() => {
+        if (eventData != null) {
+            setEvent(eventData);
+            imageRef.current.src = imageURL+eventData?.img;
+            imageRef.current.style.display = "block";
+    }}, [eventData])
+
 
     useEffect(() => {
         const options = {
@@ -41,28 +42,28 @@ const EventForm = ({handleSubmit, eventData, btnText}) => {
   
     },[])
 
-    const formData = new FormData();////////
-
     function handleChange(e) {
         setEvent({ ...event, [e.target.name]: e.target.value})
-        formData.append(e.target.name, e.target.value); /////////////
     }
 
     function handleImage(e) {    
         if (e.target.files[0]) {
             imageRef.current.src = URL.createObjectURL(e.target.files[0]);
+            imageRef.current.style.display = "block";
         } else {
-            imageRef.current.src = imageURL+event.img;
+            if (eventData !== undefined) {
+                console.log(eventData)
+                imageRef.current.src = imageURL+event.img;
+            }
+            imageRef.current.style.display = "none";
         }         
         setImage(e.target.files[0]);
-        formData.append(e.target.name, e.target.files[0]); ////////////////////
     } 
 
   
     const submit = (e) => {
-        e.preventDefault();
-        //handleSubmit(event, image);    
-        handleSubmit(formData);    
+        e.preventDefault(); 
+        handleSubmit(event, image);    
     }
 
     return (
@@ -77,14 +78,14 @@ const EventForm = ({handleSubmit, eventData, btnText}) => {
                 onChange={handleImage} 
                 fullWidth
             />        
-            <img ref={imageRef} style={{width: "100%"}}/>
+            <img ref={imageRef} style={{width: "100%", height:"15.625rem", display: "none"}}/>
             <TextField 
                 id="title" 
                 name="title"
                 label="Titulo" 
                 variant="outlined" 
                 size='small' 
-                value={event.title ? event.title : ""} 
+                value={event?.title ? event.title : ""} 
                 onChange={handleChange} 
                 fullWidth 
             />
@@ -95,7 +96,7 @@ const EventForm = ({handleSubmit, eventData, btnText}) => {
                     name="date"
                     variant="outlined" 
                     size='small' 
-                    value={event.date ? dateFormat(event.date) : ""} 
+                    value={event?.date ? dateFormat(event.date) : ""} 
                     onChange={handleChange} 
                     fullWidth 
                 />
@@ -105,7 +106,7 @@ const EventForm = ({handleSubmit, eventData, btnText}) => {
                     label="Local" 
                     variant="outlined" 
                     size='small' 
-                    value={event.locality ? event.locality : ""} 
+                    value={event?.locality ? event.locality : ""} 
                     onChange={handleChange} 
                     fullWidth 
                 />
@@ -117,7 +118,7 @@ const EventForm = ({handleSubmit, eventData, btnText}) => {
                     labelId="event_type_id" 
                     id="event_type_id" 
                     name="event_type_id"
-                    value={event.event_type_id ? event.event_type_id : ""} 
+                    value={event?.event_type_id ? event.event_type_id : ""} 
                     onChange={handleChange} 
                     placeholder="Selecione uma opção"
                     fullWidth                >
@@ -134,43 +135,10 @@ const EventForm = ({handleSubmit, eventData, btnText}) => {
                 label="Descrição" 
                 variant="outlined" 
                 size='larger' 
-                value={event.description ? event.description : ""} 
+                value={event?.description ? event.description : ""} 
                 onChange={handleChange} 
                 multiline rows={5} fullWidth
-            />
-            {/*
-            <Input 
-                label="Imagem" 
-                type="file" 
-                name="img" 
-                //value={image?.name ? image.name : ""}
-                handleChange={handleImage} 
-                placeholder="Imagem do evento" 
-            />
-            <Input 
-                label="Titulo" 
-                type="text" 
-                name="title" 
-                value={event.title ? event.title : ""} 
-                handleChange={handleChange} 
-                placeholder="Titulo do evento" 
-            />
-            <Input 
-                label="Locality" 
-                type="text" 
-                name="locality" 
-                value={event.locality ? event.locality : ""} 
-                handleChange={handleChange} 
-                placeholder="Localidade do evento" 
-            />
-            <TextArea 
-                label="Descrição" 
-                name="description" 
-                value={event.description ? event.description : ""} 
-                handleChange={handleChange} 
-                placeholder="Descrição do evento" 
-            />
-            <Button type='submit' btnText={btnText} />*/}
+            />            
             <Button type='submit' variant='contained' > {btnText} </Button>
         </Form>
     )

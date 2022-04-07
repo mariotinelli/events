@@ -6,6 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
+import dateFormat from '../../../utils'
 
 const MyEvents = () => {
 
@@ -21,10 +22,11 @@ const MyEvents = () => {
         "Content-type": "application/json"
       }      
     }
-
     fetch(`http://localhost:8000/api/event/${event.id}`, options)
     .then((resp) => resp.json())
-    .then((data) => console.log(data))
+    .then((data) => {
+        console.log(data)
+    })
     .catch((err) => console.log(err));
   }
 
@@ -62,8 +64,8 @@ const MyEvents = () => {
           <Tbody>
             {events.map((event) => (
               <Tr key={event.id}>
-                <Td> {event.title} </Td>
-                <Td> "17/12/1994" </Td>
+                <Td> <a style={{textDecoration: "none"}} href={`/events/${event.id}`}> {event.title} </a> </Td>
+                <Td> {dateFormat(event.date)} </Td>
                 <Td> {loadType(event)} </Td>
                 <Td> {event.locality} </Td>
                 <Td> {event.participants} </Td>
@@ -72,7 +74,7 @@ const MyEvents = () => {
                     <IconButton href={`/edit/${event.id}`} sx={{backgroundColor: "green", color: "white"}} aria-label="delete">
                       <EditIcon />
                     </IconButton>
-                    <IconButton onClick={deleteEvent} sx={{backgroundColor: "red", color: "white"}} aria-label="delete">
+                    <IconButton onClick={() => deleteEvent(event)} sx={{backgroundColor: "red", color: "white"}} aria-label="delete">
                       <DeleteIcon />
                     </IconButton>
                   </Stack>
